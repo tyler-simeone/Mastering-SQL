@@ -40,9 +40,8 @@ values (1, 255, 12, 555, 500, 80000, 12345, current_date, 123456789, 'mastercard
 select * from sales
 order by sale_id desc;
 
--- 2. 
 
--- WORK IN PROGRESS!
+-- 2. 
 
 create function fix_pickup_date()
 	returns trigger
@@ -66,16 +65,28 @@ $$
 create trigger update_pickup_date
 	after update
 	on sales
-	for each statement
+	for each row
 	execute procedure fix_pickup_date();
-	
-
 
 -- Test
 
+-- Setting pickup date = purchase date to trigger 
+-- 1st query
 update sales
-set purchase_date = current_date
+set pickup_date = purchase_date
+where sale_id = 1008;
+
+-- Setting pickup date = purchase date - 3 to trigger 
+-- 1st query again
+update sales
+set pickup_date = purchase_date - 3
 where sale_id = 1007;
+
+-- Setting pickup date = purchase date + 4 to trigger 
+-- 1st query again
+update sales
+set pickup_date = purchase_date + 4
+where sale_id = 1005;
 
 select * from sales
 order by sale_id desc;

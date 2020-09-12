@@ -68,6 +68,7 @@ order by dealership_id desc;
 
 
 -- 3.
+
 select * from dealerships;
 
 select count(*) from dealerships
@@ -89,19 +90,19 @@ end;
 $$
 
 create trigger tax_id
-	before insert or update
+	after insert or update
 	on dealerships
 	for each row
 	execute procedure update_tax_id();
+	
+-- Tests
 	
 insert into dealerships(business_name)
 values('new Dealership');
 
 update dealerships
 set tax_id = concat(tax_id, '--', lower(state))
-where tax_id not like '%-%-%-%--%'
-and dealership_id = 1;
+where dealership_id = 2;
 
 select * from dealerships
-where tax_id not like '%-%-%-%--%'
-and dealership_id = 1;
+where tax_id like '%-%-%-%--%';

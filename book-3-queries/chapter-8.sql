@@ -103,3 +103,28 @@ AND is_sold = false;
 SAVEPOINT remaining_mazdas;
 
 COMMIT;
+
+
+-- 3.
+
+select * from oilchangelog;
+
+BEGIN;
+
+CREATE TABLE servicedepartment (
+	vehicle_service_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	vehicle_id INT REFERENCES vehicles (vehicle_id),
+	tire_change BOOL,
+	wiper_fluid_refill BOOL,
+	oil_change_id INT REFERENCES oilchangelog (oil_change_id)
+);
+
+ALTER TABLE servicedepartment
+ADD COLUMN oil_change BOOL;
+
+SELECT * FROM servicedepartment;
+SELECT * FROM vehicles
+where vin = 'YV4852CT5B1628541';
+
+INSERT INTO servicedepartment (vehicle_id, tire_change, wiper_fluid_refill, oil_change)
+VALUES (206, true, true, true);
